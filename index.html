@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sử học THCS — Luyện tập & Thi thử</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/variables.css" />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/layout.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="stylesheet" href="assets/css/timeline.css" />
+    <link rel="stylesheet" href="assets/css/quiz.css" />
+    <link rel="stylesheet" href="assets/css/animations.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Bỏ qua điều hướng</a>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <p class="site-logo">
+          <span class="site-logo__mark">⌛</span>
+          <span class="site-logo__text">Sử học THCS</span>
+        </p>
+        <nav class="site-nav" aria-label="Chính">
+          <button type="button" class="site-nav__link is-active" data-nav="home">Trang chủ</button>
+          <button type="button" class="site-nav__link" data-nav="bank">Ngân hàng câu</button>
+        </nav>
+        <div class="header-stats" id="header-stats" aria-live="polite"></div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section id="view-home" class="view view--home">
+        <div class="hero">
+          <div class="hero__text">
+            <h1>Lịch sử không chỉ là học thuộc</h1>
+            <p class="hero__lead">
+              Chọn một thời kỳ trên trục thời gian, luyện tập có giải thích hoặc thi thử có đồng hồ — tích
+              XP, huy chương và chuỗi ngày học.
+            </p>
+          </div>
+          <div class="hero__badge" id="hero-badge-preview" aria-hidden="true"></div>
+        </div>
+
+        <div class="panel panel--glass">
+          <h2 class="panel__title">Trục thời gian tương tác</h2>
+          <p class="panel__hint">Chọn một mốc để xem số câu hỏi và bắt đầu.</p>
+          <div id="timeline-root" class="timeline-host"></div>
+        </div>
+
+        <div id="period-panel" class="period-panel" hidden>
+          <div class="period-panel__head">
+            <h3 id="period-panel-title"></h3>
+            <p id="period-panel-summary" class="period-panel__summary"></p>
+          </div>
+          <div class="period-panel__stats">
+            <span id="period-panel-count"></span>
+          </div>
+          <div class="period-panel__actions">
+            <button type="button" class="btn btn--primary" id="btn-practice">Luyện tập</button>
+            <button type="button" class="btn btn--accent" id="btn-exam">Thi thử</button>
+            <button type="button" class="btn btn--ghost" id="btn-clear-period">Bỏ chọn thời kỳ</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2 class="panel__title">Chơi nhanh toàn bộ ngân hàng</h2>
+          <p class="panel__hint">Không lọc theo thời kỳ — trộn mọi loại câu hỏi.</p>
+          <div class="btn-row">
+            <button type="button" class="btn btn--primary" id="btn-all-practice">Luyện tập tất cả</button>
+            <button type="button" class="btn btn--accent" id="btn-all-exam">Thi thử tất cả</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-quiz" class="view view--quiz" hidden>
+        <div class="quiz-bar">
+          <button type="button" class="btn btn--ghost btn--sm" id="quiz-exit">← Thoát</button>
+          <div class="quiz-bar__center">
+            <span id="quiz-mode-label" class="pill"></span>
+            <span id="quiz-progress" class="quiz-bar__progress"></span>
+          </div>
+          <div class="quiz-bar__right">
+            <span id="quiz-timer" class="quiz-timer" hidden></span>
+            <span id="quiz-score" class="quiz-score"></span>
+          </div>
+        </div>
+        <div id="quiz-root" class="quiz-root"></div>
+      </section>
+
+      <section id="view-bank" class="view view--bank" hidden>
+        <div class="panel panel--glass">
+          <h2 class="panel__title">Ngân hàng câu hỏi</h2>
+          <p class="panel__hint">
+            Thêm câu thủ công, nhập JSON hoặc dùng prompt mẫu để AI sinh JSON — sau đó dán vào ô nhập.
+          </p>
+
+          <div class="bank-tabs" role="tablist">
+            <button type="button" class="bank-tab is-active" data-bank-tab="manual" role="tab">Nhập thủ công</button>
+            <button type="button" class="bank-tab" data-bank-tab="import" role="tab">Import JSON</button>
+            <button type="button" class="bank-tab" data-bank-tab="ai" role="tab">Gợi ý AI</button>
+          </div>
+
+          <div id="bank-panel-manual" class="bank-panel">
+            <form id="form-add-mc" class="form-grid">
+              <h3>Trắc nghiệm 4 lựa chọn</h3>
+              <label>Thời kỳ (periodId)<input name="periodId" required placeholder="period-tran" /></label>
+              <label>Độ khó<select name="difficulty"><option>easy</option><option selected>medium</option><option>hard</option></select></label>
+              <label class="span-2">Câu hỏi<textarea name="stem" rows="2" required></textarea></label>
+              <label>Lựa chọn A<input name="a" required /></label>
+              <label>Lựa chọn B<input name="b" required /></label>
+              <label>Lựa chọn C<input name="c" required /></label>
+              <label>Lựa chọn D<input name="d" required /></label>
+              <label>Đáp án đúng<select name="correct"><option value="a">A</option><option value="b">B</option><option value="c">C</option><option value="d">D</option></select></label>
+              <label class="span-2">Giải thích<textarea name="explanation" rows="2" required></textarea></label>
+              <label class="span-2">URL ảnh minh họa (tuỳ chọn)<input name="mediaUrl" type="url" placeholder="https://..." /></label>
+              <button type="submit" class="btn btn--primary">Thêm câu trắc nghiệm</button>
+            </form>
+          </div>
+
+          <div id="bank-panel-import" class="bank-panel" hidden>
+            <label class="full">Dán JSON (định dạng QuestionBank)</label>
+            <textarea id="import-json" rows="12" class="code-area" placeholder='{ "version": 1, "periods": [], "questions": [] }'></textarea>
+            <div class="btn-row">
+              <button type="button" class="btn btn--primary" id="btn-merge-import">Gộp vào ngân hàng</button>
+              <button type="button" class="btn btn--ghost" id="btn-replace-import">Thay thế toàn bộ</button>
+            </div>
+          </div>
+
+          <div id="bank-panel-ai" class="bank-panel" hidden>
+            <p class="panel__hint">
+              Sao chép prompt dưới đây vào ChatGPT / Gemini kèm đoạn bài học. Yêu cầu model chỉ trả về JSON hợp lệ.
+            </p>
+            <textarea id="ai-prompt-template" class="code-area" rows="14" readonly></textarea>
+            <button type="button" class="btn btn--secondary" id="btn-copy-prompt">Sao chép prompt</button>
+          </div>
+
+          <div class="bank-meta">
+            <span id="bank-question-count"></span>
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-export-bank">Xuất JSON</button>
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-reset-bank">Khôi phục mẫu</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>MVP học Lịch sử — dữ liệu lưu cục bộ trên trình duyệt (localStorage).</p>
+    </footer>
+
+    <div id="toast-root" class="toast-root" aria-live="assertive"></div>
+
+    <script type="module" src="assets/js/app.js"></script>
+  </body>
+</html>
